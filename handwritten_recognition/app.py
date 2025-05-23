@@ -13,7 +13,7 @@ class DigitDrawingApp:
         self.root.title("手写数字识别")
         
         # 设置主窗口大小和位置
-        window_width = 500
+        window_width = 600
         window_height = 600
         screen_width = root.winfo_screenwidth()
         screen_height = root.winfo_screenheight()
@@ -26,7 +26,7 @@ class DigitDrawingApp:
         title_label.pack(pady=10)
         
         # 设置画布
-        self.canvas_width = 380
+        self.canvas_width = 500
         self.canvas_height = 380
         self.canvas = tk.Canvas(root, width=self.canvas_width, height=self.canvas_height, 
                               bg="white", relief="ridge", bd=2)
@@ -34,7 +34,7 @@ class DigitDrawingApp:
         
         # 设置画笔
         self.pen_color = "black"
-        self.pen_size =8
+        self.pen_size =5
         self.old_x = None
         self.old_y = None
         
@@ -75,7 +75,7 @@ class DigitDrawingApp:
     def reset_and_predict(self, event):
         self.old_x = None
         self.old_y = None
-        self.root.after(1000, self.predict_digit)
+        self.root.after(800, self.predict_digit)
 
         # self.predict_digit()
     
@@ -103,7 +103,8 @@ class DigitDrawingApp:
         # 调用预测函数
         try:
             prediction =detect_digits_line(temp_file.name)
-            self.result_label.config(text=f"识别结果：{prediction}")
+            # self.result_label.config(text=f"识别结果：{prediction}")
+            self.result_label.config(text=f"识别结果：{''.join(map(str, prediction))}")
         except Exception as e:
             self.result_label.config(text=f"识别错误：{str(e)}")
         finally:
