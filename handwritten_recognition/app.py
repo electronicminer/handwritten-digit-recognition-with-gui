@@ -4,7 +4,7 @@ from PIL import Image, ImageDraw
 import torch
 import os
 import tempfile
-from digit_recognition import predict_image,recognize_digit_line
+from digit_recognition import predict_image,detect_digits_line
 
 
 class DigitDrawingApp:
@@ -34,7 +34,7 @@ class DigitDrawingApp:
         
         # 设置画笔
         self.pen_color = "black"
-        self.pen_size =10
+        self.pen_size =8
         self.old_x = None
         self.old_y = None
         
@@ -57,7 +57,7 @@ class DigitDrawingApp:
         # predict_button.pack(side=tk.RIGHT, padx=10, pady=10)
         
         # 预测结果标签
-        self.result_label = tk.Label(root, text="预测结果：", font=("Arial", 24, "bold"))
+        self.result_label = tk.Label(root, text="识别结果：", font=("Arial", 24, "bold"))
         self.result_label.pack(pady=20)
     
     def start_paint(self, event):
@@ -75,13 +75,13 @@ class DigitDrawingApp:
     def reset_and_predict(self, event):
         self.old_x = None
         self.old_y = None
-        self.root.after(800, self.predict_digit)
+        self.root.after(1000, self.predict_digit)
 
         # self.predict_digit()
     
     def clear_canvas(self):
         self.canvas.delete("all")
-        self.result_label.config(text="预测结果：")
+        self.result_label.config(text="识别结果：")
     
     def predict_digit(self):
         # 创建临时文件保存画布内容
@@ -102,10 +102,10 @@ class DigitDrawingApp:
         
         # 调用预测函数
         try:
-            prediction =predict_image(temp_file.name)
+            prediction =detect_digits_line(temp_file.name)
             self.result_label.config(text=f"识别结果：{prediction}")
         except Exception as e:
-            self.result_label.config(text=f"预测错误：{str(e)}")
+            self.result_label.config(text=f"识别错误：{str(e)}")
         finally:
             # 删除临时文件
             temp_file.close()
