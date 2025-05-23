@@ -88,12 +88,13 @@ def mnist_style_preprocess(image):
     return new_img
 
 # 测试单张图片
-def predict_image(image_path, model_path='digit_cnn.pth'):
+def predict_image(image_path, model_path='digit_cnn.pth',model=None,device=None):
     # 加载模型
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    model = DigitCNN().to(device)
-    model.load_state_dict(torch.load(model_path, map_location=device))
-    model.eval()
+    if model is None:
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        model = DigitCNN().to(device)
+        model.load_state_dict(torch.load(model_path, map_location=device))
+        model.eval()
 
     image = mnist_style_preprocess(image_path)
     image = transform(image).unsqueeze(0).to(device)  # 添加batch维度
@@ -106,61 +107,56 @@ def predict_image(image_path, model_path='digit_cnn.pth'):
         
     return prediction
 
-def recognize_digit_line(image_path, model_path='digit_cnn.pth'):
-    """识别图片中的一行数字"""
-    # 读取图片并转为灰度图
-    image = Image.open(image_path).convert('L')
-    # 增强对比度
-    image = ImageEnhance.Contrast(image).enhance(2.0)
-    
-    # 转换为numpy数组并二值化
-    image_np = np.array(image)
-    threshold = 100
-    binary = (image_np > threshold) * 255
-    
-    # 查找连通区域
-    num_labels, labels, stats, centroids = cv2.connectedComponentsWithStats(binary.astype(np.uint8), connectivity=8)
-    
-    # 过滤掉太小的区域和背景（stats[0]是背景）
-    min_area = 60 # 可以调整这个值
-    valid_digits = []
-    
-    # 按照x坐标排序，确保从左到右读取
-    for i in range(1, num_labels):  # 从1开始，跳过背景
-        x, y, w, h, area = stats[i]
-        if area > min_area:
-            valid_digits.append((x, y, w, h, i))
-    
-    valid_digits.sort(key=lambda x: x[0])  # 按x坐标排序
-    
+def detect_digits_line(image_path, model_path='digit_cnn.pth'):
     # 加载模型
     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
     model = DigitCNN().to(device)
     model.load_state_dict(torch.load(model_path, map_location=device))
     model.eval()
     
-    # 识别每个数字
-    recognized_numbers = []
-    for x, y, w, h, label_idx in valid_digits:
-        # 提取单个数字区域
-        digit_region = np.zeros_like(binary)
-        digit_region[labels == label_idx] = 255
-        digit_region = digit_region[y:y+h, x:x+w]
+    # 读取图像
+    if isinstance(image_path, str):
+        img = cv2.imread(image_path)
+    else:
+        img = image_path
         
-        # 转换为PIL Image
-        digit_image = Image.fromarray(np.uint8(digit_region))
-        
-        # 预处理
-        processed_digit = mnist_style_preprocess(digit_image)
-        digit_tensor = transform(processed_digit).unsqueeze(0).to(device)
-        
-        # 预测
-        with torch.no_grad():
-            output = model(digit_tensor)
-            _, predicted = torch.max(output, 1)
-            recognized_numbers.append(predicted.item())
+    # 转换为灰度图
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
     
-    return recognized_numbers
+    # 二值化
+    _, thresh = cv2.threshold(gray, 100, 255, cv2.THRESH_BINARY_INV)
+    
+    # 查找轮廓
+    contours, _ = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    
+    # 按x坐标排序轮廓
+    digit_regions = []
+    for cnt in contours:
+        x, y, w, h = cv2.boundingRect(cnt)
+        # 过滤掉太小的区域
+        if w > 20 and h > 20:
+            digit_regions.append((x, y, w, h))
+    
+    # 按x坐标排序
+    digit_regions.sort(key=lambda x: x[0])
+    
+    # 识别每个数字
+    results = []
+    for x, y, w, h in digit_regions:
+        # 提取数字区域
+        digit_roi = img[y:y+h, x:x+w]
+        # 转换为PIL Image
+        digit_pil = Image.fromarray(cv2.cvtColor(digit_roi, cv2.COLOR_BGR2RGB))
+        # 预测
+        prediction = predict_image(digit_pil, model_path=model_path, model=model, device=device)
+        results.append(prediction)
+        # 在原图上画框和显示结果
+        cv2.rectangle(img, (x, y), (x+w, y+h), (0, 255, 0), 2)
+        cv2.putText(img, str(prediction), (x, y-10), 
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.9, (0, 255, 0), 2)
+    
+    return results
+
 
 # 使用示例
 # #摄像头识别（受环境影响过大）
