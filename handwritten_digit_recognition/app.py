@@ -5,7 +5,7 @@ import torch
 import os
 import tempfile
 from digit_recognition import predict_image,detect_digits_line
-
+from PIL import Image, ImageDraw, ImageTk
 
 class DigitDrawingApp:
     def __init__(self, root):
@@ -52,14 +52,43 @@ class DigitDrawingApp:
                                width=15, height=2)
         clear_button.pack(side=tk.LEFT, padx=10, pady=10)
         
-        # predict_button = tk.Button(button_frame, text="识别数字", command=self.predict_digit,
-        #                          width=15, height=2)
-        # predict_button.pack(side=tk.RIGHT, padx=10, pady=10)
-        
+        # 添加打开图片按钮
+        open_image_button = tk.Button(button_frame, text="打开图片", command=self.open_image,
+                                    width=15, height=2)
+        open_image_button.pack(side=tk.RIGHT, padx=10, pady=10)
+
+
         # 预测结果标签
         self.result_label = tk.Label(root, text="识别结果：", font=("Arial", 24, "bold"))
         self.result_label.pack(pady=20)
     
+    def open_image(self):
+        file_path = filedialog.askopenfilename(
+            title="选择图片文件",
+            filetypes=[
+                ("图片文件", "*.png *.jpg *.jpeg *.bmp")
+            ]
+        )
+        
+        if file_path:
+            try:
+                # 清空画布
+                self.clear_canvas()
+                
+                # 显示图片在画布上
+                img = Image.open(file_path)
+                # 调整图片大小以适应画布
+                img = img.resize((self.canvas_width, self.canvas_height), Image.Resampling.LANCZOS)
+                self.photo = ImageTk.PhotoImage(img)
+                self.canvas.create_image(0, 0, anchor="nw", image=self.photo)
+                
+                # 识别图片中的数字
+                prediction = detect_digits_line(file_path)
+                self.result_label.config(text=f"识别结果：{''.join(map(str, prediction))}")
+                
+            except Exception as e:
+                self.result_label.config(text=f"识别错误：{str(e)}")
+
     def start_paint(self, event):
         self.old_x = event.x
         self.old_y = event.y
