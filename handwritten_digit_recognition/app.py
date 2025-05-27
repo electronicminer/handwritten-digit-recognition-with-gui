@@ -12,6 +12,9 @@ class DigitDrawingApp:
         self.root = root
         self.root.title("手写数字识别")
         
+        # 设置主窗口背景色
+        self.root.configure(bg="#f0f0f5")
+        
         # 设置主窗口大小和位置
         window_width = 600
         window_height = 600
@@ -21,16 +24,29 @@ class DigitDrawingApp:
         y = (screen_height - window_height) // 2
         self.root.geometry(f"{window_width}x{window_height}+{x}+{y}")
         
-        # 创建标题标签
-        title_label = tk.Label(root, text="请在下方画板书写数字(0-9)", font=("Arial", 14))
-        title_label.pack(pady=10)
+        # 创建标题标签，使用更现代的字体和颜色
+        title_label = tk.Label(root, 
+                             text="请在下方画板书写数字(0-9)", 
+                             font=("微软雅黑", 16, "bold"),
+                             bg="#f0f0f5",
+                             fg="#2c3e50")
+        title_label.pack(pady=8)
         
-        # 设置画布
+        # 设置画布，添加圆角效果
         self.canvas_width = 500
         self.canvas_height = 380
-        self.canvas = tk.Canvas(root, width=self.canvas_width, height=self.canvas_height, 
-                              bg="white", relief="ridge", bd=2)
-        self.canvas.pack(pady=10)
+        canvas_frame = tk.Frame(root, bg="#f0f0f5")
+        canvas_frame.pack(pady=10)
+        
+        self.canvas = tk.Canvas(canvas_frame, 
+                              width=self.canvas_width, 
+                              height=self.canvas_height,
+                              bg="white", 
+                              relief="ridge", 
+                              bd=0,
+                              highlightthickness=1,
+                              highlightbackground="#dcdde1")
+        self.canvas.pack()
         
         # 设置画笔
         self.pen_color = "black"
@@ -43,24 +59,47 @@ class DigitDrawingApp:
         self.canvas.bind("<B1-Motion>", self.paint)
         self.canvas.bind("<ButtonRelease-1>", self.reset_and_predict)  # 合并重置和预测
         
-        # 按钮框架
-        button_frame = tk.Frame(root)
+         # 按钮框架
+        button_frame = tk.Frame(root, bg="#f0f0f5")
         button_frame.pack(fill=tk.X, padx=20)
         
-        # 按钮
-        clear_button = tk.Button(button_frame, text="清空画板", command=self.clear_canvas,
-                               width=15, height=2)
-        clear_button.pack(side=tk.LEFT, padx=10, pady=10)
+        # 自定义按钮样式
+        button_style = {
+            "font": ("微软雅黑", 10),
+            "width": 15,
+            "height": 2,
+            "bd": 0,
+            "relief": "flat",
+            "cursor": "hand2"
+        }
         
-        # 添加打开图片按钮
-        open_image_button = tk.Button(button_frame, text="打开图片", command=self.open_image,
-                                    width=15, height=2)
-        open_image_button.pack(side=tk.RIGHT, padx=10, pady=10)
-
-
+        # 清空按钮
+        clear_button = tk.Button(button_frame, 
+                               text="清空画板",
+                               bg="#e74c3c",
+                               fg="white",
+                               activebackground="#c0392b",
+                               command=self.clear_canvas,
+                               **button_style)
+        clear_button.pack(side=tk.LEFT, padx=10, pady=15)
+        
+        # 打开图片按钮
+        open_image_button = tk.Button(button_frame,
+                                    text="打开图片",
+                                    bg="#3498db",
+                                    fg="white",
+                                    activebackground="#2980b9",
+                                    command=self.open_image,
+                                    **button_style)
+        open_image_button.pack(side=tk.RIGHT, padx=10, pady=15)
+        
         # 预测结果标签
-        self.result_label = tk.Label(root, text="识别结果：", font=("Arial", 24, "bold"))
-        self.result_label.pack(pady=20)
+        self.result_label = tk.Label(root,
+                                   text="识别结果：",
+                                   font=("微软雅黑", 24, "bold"),
+                                   bg="#f0f0f5",
+                                   fg="#2c3e50")
+        self.result_label.pack(pady=18)
     
     def open_image(self):
         file_path = filedialog.askopenfilename(
