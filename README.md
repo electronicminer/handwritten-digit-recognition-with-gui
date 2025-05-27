@@ -111,7 +111,8 @@ transform = transforms.Compose([
 训练完成后，对模型在测试集上的表现进行混淆矩阵评估。
 使用 seaborn 进行可视化分析，如图所示：
 
-![confusion matrix](https://github.com/electronicminer/handwritten-digit-recognition-with-gui/raw/main/docs/confusion_matrix_example.png)
+![image](https://github.com/user-attachments/assets/d6d1feed-b4d4-438f-962d-066500b43bb1)
+
 
 该图展示模型对各数字分类的准确性，有助于定位混淆易发区域。
 
