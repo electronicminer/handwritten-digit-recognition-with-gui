@@ -1,7 +1,7 @@
 # handwritten-digit-recognition-with-gui
 Handwritten Digit Recognition | Python + Tkinter + PyTorch | MNIST CNN Model​
 
-# 手写数字识别系统技术报告
+# python手写数字识别课程设计
 
 ## 1. 需求分析
 
