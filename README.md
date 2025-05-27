@@ -125,13 +125,7 @@ CNN 模型结构如下：
 * 将图像尺寸缩放到 28x28 像素。保持输入大小一致；
 * 将图像从 PIL 或 numpy 格式转换为 PyTorch 的张量（tensor）；
 * 对图像像素做标准化；
-* 使用 `Adam` 优化器，初始学习率为 0.05；
-* 每轮训练后在测试集上评估模型性能，保存最佳模型；
-* 使用 `CrossEntropyLoss` 作为损失函数；
-
-最终模型测试准确率可达 98.86%。训练期间使用如下代码片段：
-
-```python
+ ```python
 transform = transforms.Compose([
     transforms.Grayscale(),
     transforms.Resize((28, 28)),
@@ -140,8 +134,11 @@ transform = transforms.Compose([
     transforms.Normalize((0.1307,), (0.3081,))
 ])
 ```
+* 使用 `Adam` 优化器，初始学习率为 0.05；
+* 每轮训练后在测试集上评估模型性能，保存最佳模型；
+* 使用 `CrossEntropyLoss` 作为损失函数；
 
-并提供模型训练日志与准确率输出。
+最终模型测试准确率可达 98.86%。训练期间提供模型训练日志与准确率输出。
 
 ### 3.5 混淆矩阵分析
 
