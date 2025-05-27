@@ -58,7 +58,7 @@ Handwritten Digit Recognition | Python + Tkinter + PyTorch | MNIST CNN Model​
 
 ## 3. 功能详细设计
 
-### 3.1 图像预处理
+### 3.1 图像预处理(mnist_style_preprocess)
 灰度转换：将输入彩色图像转换为单通道灰度图。
 
 对比度增强：采用 PIL.ImageEnhance.Contrast 提高数字笔迹的清晰度，默认增强系数为 2.0。
@@ -69,7 +69,7 @@ Handwritten Digit Recognition | Python + Tkinter + PyTorch | MNIST CNN Model​
 
 数字居中：将缩放后的数字粘贴到 28x28 黑底图像中心，使其符合 MNIST 数据格式标准。
 
-### 3.2 数字切割
+### 3.2 数字切割(detect_digits_line)
 
 识别含多个数字的图像时，使用 OpenCV 进行如下处理：
 
@@ -108,9 +108,7 @@ CNN 模型结构如下：
 
 * **优化器**：Adam，学习率 0.05。
 
-* **损失函数**：交叉熵。
-
-* **数据增强**：随机旋转提升模型泛化能力。
+* **损失函数**：交叉熵(CrossEntropyLoss)。
 
 模型使用 ReLU 激活函数和 Dropout 正则化以防止过拟合。
 
@@ -123,8 +121,11 @@ CNN 模型结构如下：
 训练使用 `train.py` 脚本实现，关键设计如下：
 
 * 使用 MNIST 数据集进行训练与测试；
+* 将图像转换为单通道灰度图；
+* 将图像尺寸缩放到 28x28 像素。保持输入大小一致；
+* 将图像从 PIL 或 numpy 格式转换为 PyTorch 的张量（tensor）；
+* 对图像像素做标准化；
 * 使用 `Adam` 优化器，初始学习率为 0.05；
-* 增加 `RandomRotation` 数据增强操作提升泛化能力；
 * 每轮训练后在测试集上评估模型性能，保存最佳模型；
 * 使用 `CrossEntropyLoss` 作为损失函数；
 
