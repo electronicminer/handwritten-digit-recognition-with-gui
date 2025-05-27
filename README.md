@@ -10,7 +10,7 @@ Handwritten Digit Recognition | Python + Tkinter + PyTorch | MNIST CNN Model​
 * 识别单张手写数字图片的数字。
 * 识别图像中多个手写数字，进行切割与批量预测。
 * 支持图形用户界面（GUI）输入图片并显示预测结果。
-* 提供摄像头实时识别（可选）。
+* 提供摄像头实时识别（可选）。（位于digit_recognition.py 仍在完善中，当前实际准确率不理想）
 * 支持模型训练、测试、准确率评估与混淆矩阵可视化。
 
 ## 2. 总体框架设计
