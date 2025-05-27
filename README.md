@@ -26,7 +26,7 @@ Handwritten Digit Recognition | Python + Tkinter + PyTorch | MNIST CNN Model​
 * **可扩展的摄像头实时识别**：
   预留摄像头实时输入接口，未来可扩展为动态数字识别。
 
-需求分析保证系统设计面面俱到，兼顾功能实用性与用户体验。
+需求分析兼顾功能实用性与用户体验。
 
 
 ## 2. 总体框架设计
