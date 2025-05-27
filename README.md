@@ -57,7 +57,7 @@ Handwritten Digit Recognition | Python + Tkinter + PyTorch | MNIST CNN Model​
 * 使用图像边界裁剪提取有效区域。
 * 将图像统一缩放至 20x20，粘贴到 28x28 黑底画布中，并利用图像几何中心进行居中处理，使其更贴近 MNIST 风格。
 
-该模块的核心函数是 `preprocess_and_center`，对外部图像进行一系列标准化和格式转换，提升模型预测准确率。
+该模块的核心函数是 `mnist_style_preprocess`，对外部图像进行一系列标准化和格式转换，提升模型预测准确率。
 
 此外，对于含多个数字的图像或画板内容，预处理后会调用 `detect_digits_line` 函数自动检测数字区域并批量识别。
 
