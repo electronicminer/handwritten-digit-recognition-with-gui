@@ -1,18 +1,15 @@
 # handwritten-digit-recognition-with-gui
 Handwritten Digit Recognition | Python + Tkinter + PyTorch | MNIST CNN Model​
 
-project-root/
-│
-├── test_image/                  # 存放测试图片的文件夹
-│
-├── app.py                       # 手写手写数字GUI窗口（从此处使用该程序）
-├── digit_cnn.pth                # 训练好的模型权重文件（PyTorch 格式）
-├── digit_recognition.ipynb      # 数字识别的 Jupyter Notebook 版本
-├── digit_recognition.py         # 
-调用模型进行识别的图像处理以及识别数字
-├── image.png                    # 示例图片（用于测试）
-├── test.py                      # 模型测试脚本
-├── train.ipynb                  # 模型训练minst手写数字的模型设计
+## 功能模块说明
+
+- **模型训练**：`train.ipynb` 负责加载 MNIST 数据集并训练 CNN 模型，输出模型为 `digit_cnn.pth`。
+- **模型识别**：
+  - `digit_recognition.py`：加载模型并进行图像预处理和识别手写图像。
+  - `digit_recognition.ipynb`：Notebook 形式展示图像识别流程（测试时使用）。
+- **gui 测试**：`test.py` 
+- **图形界面**：`app.py` 本课程设计的窗口 gui，打开本脚本以使用该程序图形化界面设计的图片识别和手写识别功能。详见后文
+- **测试图像**：`test_image/` 中存放用于测试的图像样本。
 
 # python手写数字识别系统课程设计
 
@@ -163,7 +160,7 @@ transform = transforms.Compose([
 
 该图展示模型对各数字分类的准确性，有助于定位混淆易发区域。
 
-### 3.6 图形用户界面（GUI）与交互功能
+### 3.6 图形用户界面（GUI）与交互功能（app.py）
 
 GUI 是本项目的重要组成部分，采用 Tkinter 构建，具有以下特点：
 
