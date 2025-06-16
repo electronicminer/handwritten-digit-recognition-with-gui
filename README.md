@@ -69,6 +69,8 @@ Handwritten Digit Recognition | Python + Tkinter + PyTorch | MNIST CNN Model​
 ## 3. 功能详细设计
 
 ### 3.1 图像预处理(mnist_style_preprocess)
+此函数将用户输入的手写数字或数字图像转化为minst数据集风格的图像，极大提高识别的准确度。
+
 灰度转换：将输入彩色图像转换为单通道灰度图。
 
 对比度增强：采用 PIL.ImageEnhance.Contrast 提高数字笔迹的清晰度，默认增强系数为 2.0。
